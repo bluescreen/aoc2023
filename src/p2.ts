@@ -3,6 +3,10 @@ import { readInputForDay } from "../util";
 type Color = "red" | "blue" | "green";
 type ColorSet = Record<Color, number>;
 
+const MAX_RED = 12;
+const MAX_GREEN = 13;
+const MAX_BLUE = 14;
+
 const toColorSet = (set: string): ColorSet => {
   const matches = set.match(/(\d+ (red|green|blue))/g) as string[];
   return matches
@@ -24,10 +28,12 @@ export const part1 = (input: string[]) => {
 
     const failedGames =
       body?.split(";")?.filter((set: any) => {
-        const grouped = toColorSet(set);
-        const failed =
-          grouped["red"] > 12 || grouped["green"] > 13 || grouped["blue"] > 14;
-        return failed;
+        const colors = toColorSet(set);
+        return (
+          colors["red"] > MAX_RED ||
+          colors["green"] > MAX_GREEN ||
+          colors["blue"] > MAX_BLUE
+        );
       }) ?? [];
     return (acc += failedGames.length === 0 ? game : 0);
   }, 0);
