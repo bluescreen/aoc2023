@@ -8,25 +8,30 @@ import {
 import { readInputForDay, readInputForDayExample } from "../util";
 
 describe("day 3", () => {
-  it("part 1 example", async () => {
-    const data = await readInputForDayExample(3);
-    expect(part1(data)).toEqual(4361);
+  describe("part 1", () => {
+    it("example", async () => {
+      const data = await readInputForDayExample(3);
+      expect(part1(data)).toEqual(4361);
+    });
+
+    it("input", async () => {
+      const data = await readInputForDay(3);
+      expect(part1(data)).toEqual(535351);
+    });
   });
 
-  it("part 1 input", async () => {
-    const data = await readInputForDay(3);
-    expect(part1(data)).toEqual(535351);
+  describe("part 2", () => {
+    it("example", async () => {
+      const data = await readInputForDayExample(3);
+      expect(part2(data)).toEqual(467835);
+    });
+
+    it("input", async () => {
+      const data = await readInputForDay(3);
+      expect(part2(data)).toEqual(87287096);
+    });
   });
 
-  it("part 2 example", async () => {
-    const data = await readInputForDayExample(3);
-    expect(part2(data)).toEqual(467835);
-  });
-
-  it("part 2 example", async () => {
-    const data = await readInputForDay(3);
-    expect(part2(data)).toEqual(87287096);
-  });
   describe("check adjacent", () => {
     it("should check if number is adjacent to number", () => {
       const checkObj = {
@@ -40,7 +45,7 @@ describe("day 3", () => {
     });
 
     it("should check if symbol is adjacent to number", () => {
-      const set = [
+      const set: string[][] = [
         [".", ".", "."],
         [".", "1", "."],
         [".", ".", "*"],
