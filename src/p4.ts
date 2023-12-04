@@ -1,5 +1,4 @@
-import { cpSync } from "fs";
-import { readInputForDay, readInputForDayExample } from "../util";
+import { readInputForDay } from "../util";
 
 const intersection = (arr1: number[], arr2: number[]) => {
   return arr1.filter((x) => arr2.includes(x));
