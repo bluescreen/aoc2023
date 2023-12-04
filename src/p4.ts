@@ -21,16 +21,14 @@ export const part1 = (input: string[]) => {
 
 export const part2 = (input: string[]) => {
   const cardCopies = new Array(input.length).fill(1);
-  return input
-    .map((row, cardIndex) => {
-      const [winning, mine] = parseRow(row);
-      const wins = intersection(mine, winning).length;
-      for (let i = 1; i <= wins; i++) {
-        cardCopies[cardIndex + i] += cardCopies[cardIndex];
-      }
-      return cardCopies[cardIndex];
-    })
-    .reduce((acc, points) => acc + points);
+  return input.reduce((acc, row, cardIndex) => {
+    const [winning, mine] = parseRow(row);
+    const wins = intersection(mine, winning).length;
+    for (let i = 1; i <= wins; i++) {
+      cardCopies[cardIndex + i] += cardCopies[cardIndex];
+    }
+    return acc + cardCopies[cardIndex];
+  }, 0);
 };
 
 const data = await readInputForDay(4);
