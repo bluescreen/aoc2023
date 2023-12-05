@@ -19,7 +19,7 @@ const extractGroups = (input: string[]): Groups => {
       groups[currentGroup].push({
         dest: numbers[0],
         source: numbers[1],
-        len: Number(numbers[2]),
+        len: numbers[2],
       });
     }
   }
@@ -30,37 +30,27 @@ export const part1 = (input: string[]): number => {
   const seeds = input[0].match(/\d+/g)?.map(Number) ?? [];
   const groups = extractGroups(input);
 
-  console.log("Seed", seeds);
-  //console.log("Groups", groups);
-
-  const results = seeds.map((seed) => {
-    console.log("\nseed", seed);
-    return Object.keys(groups).reduce(
-      (acc: number, name) => lookup(groups[name], acc, name),
-      seed
-    );
-  });
-
-  results.sort();
-
-  console.log("\nResults", results);
-  return Number(results[0]);
+  return Math.min(
+    ...seeds.map((seed) => {
+      return Object.keys(groups).reduce(
+        (acc: number, name) => lookup(groups[name], acc, name),
+        seed
+      );
+    })
+  );
 };
 
 export function lookup(groupRange: Range[], seed: number, name: string) {
-  const result = groupRange.find((r: Range) => {
-    return seed >= r.source && seed < r.source + r.len;
+  const result = groupRange.find((r: Range, i) => {
+    return seed >= r.source && seed <= r.source + (r.len - 1);
   });
-  //console.log(results);
-  const mapped = result ? seed - result.source + result.dest : seed;
-  console.log(name, seed, "->", mapped);
-  return mapped;
+  return result ? seed + result.dest - result.source : seed;
 }
 
 export const part2 = (input: string[]): number => {
   return 0;
 };
 
-const data = await readInputForDayExample(5);
-// console.log("Result part 1", part1(data));
+const data = await readInputForDay(5);
+console.log("Result part 1", part1(data));
 // console.log("Result part 2", part2(data));
