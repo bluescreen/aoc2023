@@ -11,14 +11,14 @@ describe("day 6", () => {
 
     it("input", async () => {
       const data = await readInputForDay(6);
-      expect(part1(data)).toEqual(71503);
+      expect(part1(data)).toEqual(3316275);
     });
   });
 
   describe("part 2", () => {
     it("example", async () => {
       const data = await readInputForDayExample(6);
-      expect(part2(data)).toEqual(46);
+      expect(part2(data)).toEqual(71503);
     });
 
     it("input", async () => {

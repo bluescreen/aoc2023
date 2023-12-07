@@ -31,6 +31,8 @@ export const part2 = (input: string[]) => {
   }, 0);
 };
 
-const data = await readInputForDay(4);
-console.log("Result part 1", part1(data));
-console.log("Result part 2", part2(data));
+export const main = async () => {
+  const data = await readInputForDay(4);
+  console.log("Result part 1", part1(data));
+  console.log("Result part 2", part2(data));
+};
