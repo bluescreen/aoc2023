@@ -29,3 +29,14 @@ export const readInputForDayExample = async (
   );
   return (await file.text()).split("\n");
 };
+
+export function printGrid(grid: string[][]) {
+  let out = "";
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[y].length; x++) {
+      out += grid[y][x];
+    }
+    out += "\n";
+  }
+  console.log(out);
+}

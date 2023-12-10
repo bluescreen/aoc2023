@@ -15,15 +15,15 @@ describe("day 10", () => {
     });
   });
 
-  // describe("part 2", () => {
-  //   it("example", async () => {
-  //     const data = await readInputForDayExample(10);
-  //     expect(part2(data)).toEqual(2);
-  //   });
+  describe("part 2", () => {
+    it("example", async () => {
+      const data = await readInputForDayExample(10, 2);
+      expect(part2(data)).toEqual(4);
+    });
 
-  //   it("input", async () => {
-  //     const data = await readInputForDay(10);
-  //     expect(part2(data)).toEqual(1022);
-  //   });
-  // });
+    it("input", async () => {
+      const data = await readInputForDay(10);
+      expect(part2(data)).toEqual(541);
+    });
+  });
 });
