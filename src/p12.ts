@@ -19,16 +19,16 @@ function createStateKey(state: State): string {
 export function calculateArrangements(
   pattern: string,
   blocks: number[],
-  state: State = DEFAULT_STATE
+  state: State = DEFAULT_STATE,
 ): number {
-  let cacheKey: string = createStateKey(state);
+  const cacheKey: string = createStateKey(state);
   if (cacheKey in CACHE) {
     return CACHE[cacheKey];
   }
   if (state.patternPos === pattern.length) {
     return (state.blockPos === blocks.length && state.length === 0) ||
-      (state.blockPos === blocks.length - 1 &&
-        blocks[state.blockPos] === state.length)
+        (state.blockPos === blocks.length - 1 &&
+          blocks[state.blockPos] === state.length)
       ? 1
       : 0;
   }
@@ -48,15 +48,14 @@ function calcArrangementsForCharacter(
   c: string,
   state: State,
   dots: string,
-  blocks: number[]
+  blocks: number[],
 ): number {
   const nextState: State = {
     patternPos: state.patternPos + 1,
     blockPos: state.blockPos,
     length: 0,
   };
-  const isMatching =
-    state.length > 0 &&
+  const isMatching = state.length > 0 &&
     state.blockPos < blocks.length &&
     blocks[state.blockPos] === state.length;
 
@@ -87,7 +86,7 @@ export const part1 = (input: string[]): number => {
 export const part2 = (input: string[]): number => {
   USE_CACHE = true;
 
-  return input.reduce((acc, row, i) => {
+  return input.reduce((acc, row) => {
     const [pattern, rest] = row.split(" ");
 
     const pattern2 = [pattern, pattern, pattern, pattern, pattern].join("?");
