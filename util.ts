@@ -30,7 +30,11 @@ export const readInputForDayExample = async (
   return (await file.text()).split("\n");
 };
 
-export function printGrid(grid: string[][], title?: string) {
+export function printGrid(
+  grid: string[][],
+  title?: string,
+  marked?: Set<string>
+) {
   let out = "";
   let height = 1;
   let width = grid[0].length;
@@ -45,7 +49,8 @@ export function printGrid(grid: string[][], title?: string) {
   for (let y = 0; y < grid.length; y++) {
     out += "│ ";
     for (let x = 0; x < grid[y].length; x++) {
-      out += grid[y][x] + " │ ";
+      const value = marked?.has(`${y},${x}`) ? "#" : grid[y][x];
+      out += value + " │ ";
     }
     out += " " + height + "\n";
     height++;
