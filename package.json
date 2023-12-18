@@ -9,6 +9,7 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "day":"bun index.ts"
+    "day": "bun index.ts",
+    "debug": "bun --inspect-wait=ws://localhost:6499/debug index.ts"
   }
 }

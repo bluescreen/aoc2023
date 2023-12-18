@@ -31,7 +31,7 @@ export const readInputForDayExample = async (
 };
 
 export function printGrid(
-  grid: string[][],
+  grid: string | number[][],
   title?: string,
   marked?: Set<string>
 ) {
