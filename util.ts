@@ -35,7 +35,7 @@ function bold(text: string) {
 }
 
 export function printGrid(
-  grid: string | number[][],
+  grid: (string | number)[][],
   title?: string,
   marked?: Set<string>,
   callback?: (r: number, c: number) => string
