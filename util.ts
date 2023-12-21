@@ -30,10 +30,15 @@ export const readInputForDayExample = async (
   return (await file.text()).split("\n");
 };
 
+function bold(text: string) {
+  return "\033[1m" + text + "\033[0m";
+}
+
 export function printGrid(
   grid: string | number[][],
   title?: string,
-  marked?: Set<string>
+  marked?: Set<string>,
+  callback?: (r: number, c: number) => string
 ) {
   let out = "";
   let height = 1;
@@ -49,7 +54,10 @@ export function printGrid(
   for (let y = 0; y < grid.length; y++) {
     out += "│ ";
     for (let x = 0; x < grid[y].length; x++) {
-      const value = marked?.has(`${y},${x}`) ? "#" : grid[y][x];
+      const value =
+        marked?.has(`${y},${x}`) && callback
+          ? bold(callback(y, x))
+          : grid[y][x];
       out += value + " │ ";
     }
     out += " " + height + "\n";
