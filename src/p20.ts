@@ -11,7 +11,7 @@ type Module = {
 type QueueItem = [string, string, string];
 
 export const main = async () => {
-  const data = await readInputForDayExample(20);
+  const data = await readInputForDay(20);
   console.log("Result part 1", part1(data));
   console.log("Result part 2", part2(data));
 };
@@ -24,9 +24,8 @@ export function part1(input: string[]) {
 
   let lo = 0,
     hi = 0;
-  for (let i = 0; i < 1; i++) {
-    const result = pushButton(broadcastTargets, queue, modules, lo, hi);
-    console.log(result);
+  for (let i = 0; i < 1000; i++) {
+    const result = pushButton(broadcastTargets, queue, modules);
     lo += result.lo;
     hi += result.hi;
   }
@@ -34,41 +33,90 @@ export function part1(input: string[]) {
   return lo * hi;
 }
 
+let cycleLengths: Record<string, number> = {};
+let seen: Record<string, number> = {};
+let presses = 0;
+let isDone = false;
+
+export function part2(input: string[]) {
+  var { modules, broadcastTargets } = extractModuleTargets(input);
+  initializeModules(modules);
+  const feed = Object.values(modules).find((m) =>
+    m.outputs.includes("rx")
+  ) as Module;
+  seen = Object.entries(modules)
+    .filter(([name, module]) => name in module.outputs)
+    .reduce((accumulator, [name]) => {
+      accumulator[name] = 0;
+      return accumulator;
+    }, {} as { [name: string]: number });
+
+  const queue = new Deque<QueueItem>([]);
+  do {
+    presses++;
+    pushButton(broadcastTargets, queue, modules, feed);
+  } while (!isDone);
+
+  console.log(cycleLengths);
+
+  let x = 0;
+  for (const cycleLength of Object.values(cycleLengths)) {
+    x += (x * cycleLength) / gcd(x, cycleLength);
+  }
+
+  return x;
+}
+
+function gcd(a: number, b: number): number {
+  return b === 0 ? a : gcd(b, a % b);
+}
+
 function pushButton(
   broadcastTargets: string[],
   queue: Deque<QueueItem>,
   modules: Record<string, Module>,
-  lo: number,
-  hi: number
+  feed?: Module
 ) {
-  lo++;
+  let lo = 1,
+    hi = 0;
   broadcastTargets.forEach((x) => queue.append(["broadcaster", x, "lo"]));
 
   while (!queue.isEmpty()) {
     const [origin, target, pulse] = queue.popLeft() as QueueItem;
     assert(pulse);
-    console.log(origin, "-" + pulse, "->", target);
 
     pulse === "lo" ? lo++ : hi++;
     if (!(target in modules)) continue;
 
-    let { type, memory, outputs } = modules[target];
+    let module = modules[target];
 
-    let outgoing: "lo" | "hi";
-    if (typeof memory === "string" && type === "%" && pulse === "lo") {
-      memory = memory === "off" ? "on" : "off";
-      outgoing = memory === "on" ? "hi" : "lo";
+    if (module.name == feed?.name && pulse === "hi") {
+      if (!(origin in cycleLengths)) {
+        cycleLengths[origin] = presses;
+      } else {
+        assert(presses == seen[origin] * cycleLengths[origin]);
+      }
+      seen[origin] += 1;
+    }
 
-      outputs.forEach((output) =>
-        queue.append([modules[target].name, output, outgoing])
+    if (Object.values(seen).length > 0 && Object.values(seen).every((m) => m)) {
+      isDone = true;
+      break;
+    }
+
+    if (module.type === "%" && pulse === "lo") {
+      module.memory = module.memory === "off" ? "on" : "off";
+      const outgoing = module.memory === "on" ? "hi" : "lo";
+      module.outputs.forEach((output) =>
+        queue.append([module.name, output, outgoing])
       );
-    } else {
-      const newMemory = memory;
-      newMemory[origin] = pulse;
-      outgoing = Object.values(newMemory).every((x) => x === "hi")
+    } else if (typeof module.memory === "object") {
+      module.memory[origin] = pulse;
+
+      const outgoing = Object.values(module.memory).every((x) => x === "hi")
         ? "lo"
         : "hi";
-      outputs.forEach((output) =>
+      module.outputs.forEach((output) =>
         queue.append([modules[target].name, output, outgoing])
       );
     }
@@ -106,8 +154,4 @@ function extractModuleTargets(input: string[]): {
     }
   }
   return { modules, broadcastTargets };
-}
-
-export function part2(input: string[]) {
-  return 0;
 }
