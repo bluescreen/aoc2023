@@ -4,6 +4,7 @@ import { numberToColorHex } from "./util.js";
 import * as bricks from "./data.json";
 
 const DEBUG = false;
+const USE_RED_GREEN = true;
 
 function initScene() {
   const scene = new THREE.Scene();
@@ -18,7 +19,7 @@ function initScene() {
   );
   camera.position.set(10, 10, 20);
   camera.lookAt(0, 1, 0);
-  camera.logarithmicDepthBuffer = true;
+  // camera.logarithmicDepthBuffer = true;
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -67,6 +68,7 @@ function addBricks(scene, bricks) {
   for (let brick of bricks) {
     const [x1, y1, z1] = brick[0];
     const [x2, y2, z2] = brick[1];
+    const color = Number(brick[2]);
 
     var coord1 = new THREE.Vector3(x1, y1, z1);
     var coord2 = new THREE.Vector3(x2, y2, z2);
@@ -79,8 +81,12 @@ function addBricks(scene, bricks) {
       Math.abs(y2 - y1) + 1,
       Math.abs(z2 - z1) + 1
     );
+
+    const redGreen = color === 0 ? 0xff0000 : 0x00ff00;
+    const colorHex = USE_RED_GREEN ? redGreen : numberToColorHex(i);
+
     const solidMaterial = new THREE.MeshBasicMaterial({
-      color: numberToColorHex(i),
+      color: colorHex,
     });
     const solidBox = new THREE.Mesh(solidGeometry, solidMaterial);
     solidBox.castShadow = true;

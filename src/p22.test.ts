@@ -1,30 +1,28 @@
 import { expect, describe, test as it } from "bun:test";
-import { part1, part2 } from "./p21";
+import { part1, part2 } from "./p22";
 import { readInputForDay, readInputForDayExample } from "../util";
 
-describe("day 21", () => {
+describe("day 22", () => {
   describe("part 1", () => {
     it("example", async () => {
-      const data = await readInputForDayExample(21);
-      expect(part1(data, 6)).toEqual(16);
+      const data = await readInputForDayExample(22);
+      expect(await part1(data)).toEqual(5);
     });
 
     it("input", async () => {
-      const data = await readInputForDay(21);
-      expect(part1(data, 64)).toEqual(3743);
+      const data = await readInputForDay(22);
+      expect(await part1(data)).toEqual(471);
     });
   });
 
   describe("part 2", () => {
     it("example", async () => {
-      const data = await readInputForDayExample(21);
-      expect(part2(data, 6)).toEqual(16);
-      expect(part2(data, 10)).toEqual(50);
-      expect(part2(data, 100)).toEqual(1594);
+      const data = await readInputForDayExample(22);
+      expect(part2(data)).toEqual(0);
     });
 
     it.skip("input", async () => {
-      const data = await readInputForDay(21);
+      const data = await readInputForDay(22);
       expect(part2(data)).toEqual(0);
     });
   });
