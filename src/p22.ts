@@ -1,7 +1,7 @@
 import { readInputForDay, readInputForDayExample } from "../util";
 
 export const main = async () => {
-  const data = await readInputForDayExample(22);
+  const data = await readInputForDay(22);
   console.log("Result part 1", await part1(data));
   console.log("Result part 2", part2(data));
 
@@ -49,10 +49,10 @@ export async function part1(input: string[]) {
   }
   bricks.sort((b) => b.z1);
 
-  const coords = bricks.map((b) => brickToString(b)).join("\n");
+  const coords = "[" + bricks.map((b) => brickToString(b)).join("\n") + "]";
 
   console.log(coords);
-  await Bun.write("./out.txt", coords);
+  await Bun.write("./data.json", coords);
 
   let k_supports_v: Record<number, number[]> = {};
   let v_supports_k: Record<number, number[]> = {};

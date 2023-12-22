@@ -9,7 +9,13 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
+    "dev": "bun bun ./viewer/main.js --outdir ./viewer/build --watch",
     "day": "bun index.ts",
+    "serve": "bun ./viewer/server.js",
     "debug": "bun --inspect-wait=ws://localhost:6499/debug index.ts"
+  },
+  "dependencies": {
+    "@types/three": "^0.159.0",
+    "three": "^0.159.0"
   }
 }
