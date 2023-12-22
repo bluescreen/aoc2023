@@ -15,8 +15,9 @@ function initScene() {
     0.1,
     1000
   );
+  camera.logarithmicDepthBuffer = true;
 
-  const renderer = new THREE.WebGLRenderer();
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
   new OrbitControls(camera, renderer.domElement);
