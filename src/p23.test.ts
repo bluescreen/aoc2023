@@ -6,24 +6,24 @@ describe("day 23", () => {
   describe("part 1", () => {
     it("example", async () => {
       const data = await readInputForDayExample(23);
-      expect(await part1(data)).toEqual(0);
+      expect(await part1(data)).toEqual(94);
     });
 
     it("input", async () => {
       const data = await readInputForDay(23);
-      expect(await part1(data)).toEqual(0);
+      expect(await part1(data)).toEqual(2130);
     });
   });
 
   describe("part 2", () => {
     it("example", async () => {
       const data = await readInputForDayExample(23);
-      expect(await part2(data)).toEqual(0);
+      expect(await part2(data)).toEqual(154);
     });
 
     it("input", async () => {
       const data = await readInputForDay(23);
-      expect(await part2(data)).toEqual(0);
+      expect(await part2(data)).toEqual(6710);
     });
   });
 });
