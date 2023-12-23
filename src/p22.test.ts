@@ -18,12 +18,12 @@ describe("day 22", () => {
   describe("part 2", () => {
     it("example", async () => {
       const data = await readInputForDayExample(22);
-      expect(part2(data)).toEqual(0);
+      expect(await part2(data)).toEqual(7);
     });
 
-    it.skip("input", async () => {
+    it("input", async () => {
       const data = await readInputForDay(22);
-      expect(part2(data)).toEqual(0);
+      expect(await part2(data)).toEqual(68525);
     });
   });
 });
