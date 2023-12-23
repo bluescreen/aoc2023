@@ -1,5 +1,5 @@
 import assert from "assert";
-import { readInputForDay, readInputForDayExample } from "../util";
+import { readInputForDay } from "../util";
 import Deque from "./deque";
 
 type Module = {
@@ -44,11 +44,12 @@ export function part2(input: string[]) {
   const feed = Object.values(modules).find((m) =>
     m.outputs.includes("rx")
   ) as Module;
+
   seen = Object.entries(modules)
-    .filter(([name, module]) => name in module.outputs)
-    .reduce((accumulator, [name]) => {
-      accumulator[name] = 0;
-      return accumulator;
+    .filter(([_, module]) => module.outputs.includes(feed.name))
+    .reduce((acc, [name]) => {
+      acc[name] = 0;
+      return acc;
     }, {} as { [name: string]: number });
 
   const queue = new Deque<QueueItem>([]);
@@ -56,19 +57,16 @@ export function part2(input: string[]) {
     presses++;
     pushButton(broadcastTargets, queue, modules, feed);
   } while (!isDone);
-
-  console.log(cycleLengths);
-
-  let x = 0;
-  for (const cycleLength of Object.values(cycleLengths)) {
-    x += (x * cycleLength) / gcd(x, cycleLength);
-  }
-
-  return x;
+  return lcm(Object.values(cycleLengths));
 }
 
-function gcd(a: number, b: number): number {
-  return b === 0 ? a : gcd(b, a % b);
+function gcd(a: number, b: number) {
+  if (b === 0) return a;
+  return gcd(b, a % b);
+}
+
+function lcm(numbers: number[]) {
+  return numbers.reduce((a, b) => (a * b) / gcd(a, b));
 }
 
 function pushButton(
@@ -83,7 +81,6 @@ function pushButton(
 
   while (!queue.isEmpty()) {
     const [origin, target, pulse] = queue.popLeft() as QueueItem;
-    assert(pulse);
 
     pulse === "lo" ? lo++ : hi++;
     if (!(target in modules)) continue;
@@ -91,10 +88,10 @@ function pushButton(
     let module = modules[target];
 
     if (module.name == feed?.name && pulse === "hi") {
-      if (!(origin in cycleLengths)) {
+      if (!cycleLengths[origin]) {
         cycleLengths[origin] = presses;
       } else {
-        assert(presses == seen[origin] * cycleLengths[origin]);
+        assert(presses === seen[origin] * cycleLengths[origin]);
       }
       seen[origin] += 1;
     }

@@ -20,15 +20,10 @@ describe("day 20", () => {
     });
   });
 
-  describe.skip("part 2", () => {
-    it("example", async () => {
-      const data = await readInputForDayExample(20);
-      expect(part2(data)).toEqual(0);
-    });
-
-    it.skip("input", async () => {
+  describe("part 2", () => {
+    it("input", async () => {
       const data = await readInputForDay(20);
-      expect(part2(data)).toEqual(0);
+      expect(part2(data)).toEqual(231897990075517);
     });
   });
 });
