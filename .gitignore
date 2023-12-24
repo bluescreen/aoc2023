@@ -175,3 +175,5 @@ dist
 .DS_Store
 viewer/build
 viewer/data.json
+*_2.ts
+*.js
