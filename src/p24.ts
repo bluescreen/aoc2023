@@ -1,5 +1,4 @@
-import { readInputForDay, readInputForDayExample } from "../util";
-import { solve } from "./p24_solve";
+import { readInputForDay } from "../util";
 
 type Hailstone = {
   x: number;
@@ -20,8 +19,10 @@ type Point = {
 
 export const main = async () => {
   const data = await readInputForDay(24);
-  //   console.log("Result part 1", part1(data));
-  console.log("Result part 2", part2(data));
+  console.log("Result part 1", part1(data));
+
+  // Part 2 cannot be run with bun. Need to fallback to Node
+  // console.log("Result part 2", part2(data));
 };
 
 export const part1 = (input: string[], isExample = false): number => {
