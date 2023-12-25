@@ -16,16 +16,9 @@ describe("day 21", () => {
   });
 
   describe("part 2", () => {
-    it("example", async () => {
-      const data = await readInputForDayExample(21);
-      expect(part2(data, 6)).toEqual(16);
-      expect(part2(data, 10)).toEqual(50);
-      expect(part2(data, 100)).toEqual(1594);
-    });
-
-    it.skip("input", async () => {
+    it("input", async () => {
       const data = await readInputForDay(21);
-      expect(part2(data)).toEqual(0);
+      expect(part2(data)).toEqual(618261433219147);
     });
   });
 });

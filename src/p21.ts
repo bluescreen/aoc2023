@@ -1,92 +1,84 @@
-import { printGrid, readInputForDay, readInputForDayExample } from "../util";
+import { readInputForDay } from "../util";
 
 type Point = { y: number; x: number };
 
+const STEPS = 2023 * 100 * 131 + 65;
+
 export const main = async () => {
-  const data1 = await readInputForDayExample(21);
-  console.log("Result part 1", part1(data1, 6));
-
-  const data2 = await readInputForDayExample(21);
-  console.log("\nResult part 2 example", part2(data2, 6));
-
-  // const data = await readInputForDay(21);
-  //console.log("\nResult part 2 real", part2(data, 265013656));
+  const data = await readInputForDay(21);
+  console.log("Result part 1", part1(data, 6));
+  console.log("Result part 2 example 4", part2(data));
 };
 
 export function part1(input: string[], maxSteps = 16) {
   const grid = input.map((r) => r.split("")) as string[][];
   const start = findStartNode(grid);
   const validPositions = processGrid(grid, start, maxSteps);
-
-  printGrid(grid, "", new Set(validPositions), () => "O");
-
   return validPositions.length + 1;
 }
 
-export function part2(input: string[], maxSteps = 6) {
-  const grid = input.map((r) => r.split("")) as string[][];
-  const start = findStartNode(grid);
+export const part2 = (input: string[]) => {
+  const map = input.map((line) => line.split(""));
 
-  const fill = (r: number, c: number, n: number): number => {
-    const points = processGrid(grid, { y: r, x: c }, n);
-    return points.length;
+  const startY = map.findIndex((line) => line.includes("S"));
+  const startX = map[startY].findIndex((char) => char === "S");
+  map[startY][startX] = ".";
+
+  const steps = STEPS;
+
+  const fill = (x: number, y: number, maxSteps: number): number => {
+    return processGrid(map, { y, x }, maxSteps).length;
   };
 
-  const size: number = grid.length;
-  const steps: number = maxSteps;
-  const sr: number = start.y;
-  const sc: number = start.x;
+  const mapWidth = map.length;
 
-  console.log({ size, steps, sr, sc });
+  const gridWidth = ~~(steps / mapWidth) - 1;
 
-  const grid_width: number = Math.floor(steps / size) - 1;
+  const odd = (~~(gridWidth / 2) * 2 + 1) ** 2;
+  const even = (~~((gridWidth + 1) / 2) * 2) ** 2;
 
-  console.log({ steps, grid_width });
+  const oddPoints = fill(startX, startY, mapWidth * 2 + 1);
+  const evenPoints = fill(startX, startY, mapWidth * 2);
 
-  const odd: number = Math.pow(Math.floor(grid_width / 2) * 2 + 1, 2);
-  const even: number = Math.pow(Math.floor((grid_width + 1) / 2) * 2, 2);
+  const cornerTop = fill(startX, mapWidth - 1, mapWidth - 1);
+  const cornerRight = fill(0, startY, mapWidth - 1);
+  const cornerBottom = fill(startX, 0, mapWidth - 1);
+  const cornerLeft = fill(mapWidth - 1, startY, mapWidth - 1);
 
-  const oddPoints: number = fill(sr, sc, size * 2 + 1);
-  const evenPoints: number = fill(sr, sc, size * 2);
+  const smallSteps = ~~(mapWidth / 2) - 1;
 
-  const cornerTop: number = fill(size - 1, sc, size - 1);
-  const cornerRight: number = fill(sr, 0, size - 1);
-  const cornerBottom: number = fill(0, sc, size - 1);
-  const cornerLeft: number = fill(sr, size - 1, size - 1);
-  const sumCorners = cornerTop + cornerRight + cornerBottom + cornerLeft;
+  const smallTopRight = fill(0, mapWidth - 1, smallSteps);
+  const smallTopLeft = fill(mapWidth - 1, mapWidth - 1, smallSteps);
+  const smallBottomRight = fill(0, 0, smallSteps);
+  const smallBottomLeft = fill(mapWidth - 1, 0, smallSteps);
 
-  const half = Math.floor(size / 2);
-  const smallTopRight: number = fill(size - 1, 0, half - 1);
-  const smallTopLeft: number = fill(size - 1, size - 1, half - 1);
-  const smallBottomRight: number = fill(0, 0, half - 1);
-  const smallBottomLeft: number = fill(0, size - 1, half - 1);
-  const sumSmall =
-    smallTopRight + smallTopLeft + smallBottomRight + smallBottomLeft;
+  const largeSteps = ~~((mapWidth * 3) / 2) - 1;
 
-  const edge = Math.floor((size * 3) / 2);
-  const largeTopRight: number = fill(size - 1, 0, edge - 1);
-  const largeTopLeft: number = fill(size - 1, size - 1, edge - 1);
-  const largeBottomRight: number = fill(0, 0, edge - 1);
-  const largeBottomLeft: number = fill(0, size - 1, edge - 1);
-  const sumLarge =
-    largeTopRight + largeTopLeft + largeBottomRight + largeBottomLeft;
+  const largeTopRight = fill(0, mapWidth - 1, largeSteps);
+  const largeTopLeft = fill(mapWidth - 1, mapWidth - 1, largeSteps);
+  const largeBottomRight = fill(0, 0, largeSteps);
+  const largeBottomLeft = fill(mapWidth - 1, 0, largeSteps);
+
+  const mainPoints = odd * oddPoints + even * evenPoints;
+
+  const small =
+    (gridWidth + 1) *
+    (smallBottomLeft + smallBottomRight + smallTopLeft + smallTopRight);
+
+  const large =
+    gridWidth *
+    (largeBottomRight + largeBottomLeft + largeTopLeft + largeTopRight);
 
   return (
-    odd * oddPoints +
-    even * evenPoints +
-    sumCorners +
-    (grid_width + 1) * sumSmall +
-    grid_width * sumLarge +
-    1
+    mainPoints +
+    small +
+    large +
+    cornerTop +
+    cornerRight +
+    cornerBottom +
+    cornerLeft
   );
-}
-
-// Too low
-// 6121815468
-// 1202207955932
-// 1202181454566
-// 618220507929054
-// 62776811058489530
+};
 
 function processGrid(
   grid: string[][],
